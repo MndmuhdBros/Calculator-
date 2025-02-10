@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Animated Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            transition: background 0.3s;
+        }
+
+        .calculator {
+            width: 350px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s;
+        }
+
+        .display {
+            width: 100%;
+            height: 60px;
+            text-align: right;
+            font-size: 2em;
+            padding: 10px;
+            border: none;
+            outline: none;
+            background: #222;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        button {
+            width: 100%;
+            height: 60px;
+            font-size: 1.5em;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            background: #444;
+            color: white;
+            transition: transform 0.1s, background 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.9);
+            background: #666;
+        }
+
+        .equal {
+            background: #28a745;
+        }
+
+        .equal:active {
+            background: #218838;
+        }
+
+        .clear {
+            background: #dc3545;
+        }
+
+        .clear:active {
+            background: #c82333;
+        }
+
+        .mode-toggle {
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border: none;
+            background: #222;
+            color: white;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .history {
+            margin-top: 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 10px;
+            max-height: 150px;
+            overflow-y: auto;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .history button {
+            background: #dc3545;
+            color: white;
+            margin-top: 10px;
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .dark-mode {
+            background-color: #222;
+            color: white;
+        }
+
+        .dark-mode .calculator {
+            background-color: #333;
+        }
+
+        .dark-mode .history {
+            background-color: #444;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="mode-toggle" onclick="toggleMode()">🌙 Dark Mode</button>
+
+    <div class="calculator">
+        <input type="text" id="display" class="display" disabled>
+        <div class="buttons">
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button onclick="appendValue('/')">÷</button>
+            
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button onclick="appendValue('*')">×</button>
+            
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button onclick="appendValue('-')">−</button>
+            
+            <button onclick="appendValue('0')">0</button>
+            <button onclick="appendValue('.')">.</button>
+            <button onclick="clearDisplay()" class="clear">C</button>
+            <button onclick="appendValue('+')">+</button>
+            
+            <button onclick="appendScientific('Math.sqrt(')">√</button>
+            <button onclick="appendScientific('Math.sin(')">sin</button>
+            <button onclick="appendScientific('Math.cos(')">cos</button>
+            <button onclick="appendScientific('Math.tan(')">tan</button>
+
+            <button onclick="appendScientific('Math.log(')">log</button>
+            <button onclick="appendValue('(')">(</button>
+            <button onclick="appendValue(')')">)</button>
+            <button onclick="calculateResult()" class="equal">=</button>
+        </div>
+    </div>
+
+    <div class="history">
+        <h3>History</h3>
+        <ul id="history-list"></ul>
+        <button onclick="clearHistory()">Clear History</button>
+    </div>
+
+    <script>
+        let darkMode = false;
+        let historyList = document.getElementById("history-list");
+
+        function appendValue(value) {
+            document.getElementById("display").value += value;
+        }
+
+        function appendScientific(func) {
+            document.getElementById("display").value += func;
+        }
+
+        function clearDisplay() {
+            document.getElementById("display").value = "";
+        }
+
+        function calculateResult() {
+            try {
+                let expression = document.getElementById("display").value;
+                let result = eval(expression);
+                document.getElementById("display").value = result;
+                saveHistory(expression + " = " + result);
+            } catch {
+                document.getElementById("display").value = "Error";
+            }
+        }
+
+        function saveHistory(entry) {
+            let li = document.createElement("li");
+            li.textContent = entry;
+            historyList.prepend(li);
+        }
+
+        function clearHistory() {
+            historyList.innerHTML = "";  // Clears all history
+        }
+
+        function toggleMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle("dark-mode");
+            document.querySelector(".mode-toggle").textContent = darkMode ? "☀️ Light Mode" : "🌙 Dark Mode";
+        }
+    </script>
+
+</body>
+</html>
